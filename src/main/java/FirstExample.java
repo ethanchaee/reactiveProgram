@@ -2,7 +2,6 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.functions.Consumer;
-import io.reactivex.rxjava3.internal.operators.observable.ObservableFromArray;
 import io.reactivex.rxjava3.observables.ConnectableObservable;
 import io.reactivex.rxjava3.subjects.AsyncSubject;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
@@ -11,7 +10,6 @@ import io.reactivex.rxjava3.subjects.ReplaySubject;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 
-import javax.crypto.interfaces.PBEKey;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
@@ -228,8 +226,8 @@ public class FirstExample {
     }
 
     public static void main(String[] args) {
-        FirstExample firstExample = new FirstExample();
+        OperatorExample example = new OperatorExample();
 
-        firstExample.connectableObservable();
+        example.query();
     }
 }
