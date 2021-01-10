@@ -2,6 +2,12 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.functions.Consumer;
+import io.reactivex.rxjava3.internal.operators.observable.ObservableFromArray;
+import io.reactivex.rxjava3.observables.ConnectableObservable;
+import io.reactivex.rxjava3.subjects.AsyncSubject;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.rxjava3.subjects.ReplaySubject;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 
@@ -10,6 +16,7 @@ import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class FirstExample {
     private void emit() {
@@ -141,9 +148,88 @@ public class FirstExample {
 
     }
 
+    private void asyncSubject(){
+        AsyncSubject<String> subject = AsyncSubject.create();
+        subject.subscribe(data ->  System.out.println("Subscriber #1 -> " + data));
+        subject.onNext("1");
+        subject.onNext("3");
+        subject.subscribe(data ->  System.out.println("Subscriber #2 -> " + data));
+        subject.onNext("5");
+        subject.onComplete();
+    }
+
+    //public abstract class Subject<T> extends Observable<T> implements Observer<T>
+    //public abstract class Subject<T> extends Observable<T> implements Observer<T> {
+    private void asyncSubjectFromArray(){
+        Float [] temperatures = {20.3f, 10.2f, 5f};
+        Observable<Float> source = Observable.fromArray(temperatures);
+        AsyncSubject<Float> subject = AsyncSubject.create();
+        subject.subscribe(data ->  System.out.println("Subscriber #1 -> " + data));
+
+        source.subscribe(subject);
+    }
+
+    private void asyncSubjectAfterComplete(){
+        AsyncSubject<Integer> subject = AsyncSubject.create();
+        subject.onNext(10);
+        subject.onNext(11);
+        subject.subscribe(data ->  System.out.println("Subscriber #1 -> " + data));
+        subject.onNext(12);
+        subject.onComplete();
+        subject.onNext(13);
+        subject.subscribe(data ->  System.out.println("Subscriber #2 -> " + data));
+        subject.subscribe(data ->  System.out.println("Subscriber #3 -> " + data));
+
+    }
+
+    private void behaviorSubject(){
+        BehaviorSubject<Integer> subject = BehaviorSubject.createDefault(6);
+        subject.subscribe(data ->  System.out.println("Subscriber #1 -> " + data));
+        subject.onNext(1);
+        subject.onNext(3);
+        subject.subscribe(data ->  System.out.println("Subscriber #2 -> " + data));
+        subject.onNext(5);
+        subject.onComplete();
+    }
+
+    private void publishSubject(){
+        PublishSubject<Integer> subject = PublishSubject.create();
+        subject.subscribe(data ->  System.out.println("Subscriber #1 -> " + data));
+        subject.onNext(1);
+        subject.onNext(3);
+        subject.subscribe(data ->  System.out.println("Subscriber #2 -> " + data));
+        subject.onNext(5);
+        subject.onComplete();
+    }
+
+    private void replaySubject(){
+        ReplaySubject<Integer> subject = ReplaySubject.create();
+        subject.subscribe(data ->  System.out.println("Subscriber #1 -> " + data));
+        subject.onNext(1);
+        subject.onNext(3);
+        subject.subscribe(data ->  System.out.println("Subscriber #2 -> " + data));
+        subject.onNext(5);
+        subject.onComplete();
+    }
+
+    private void connectableObservable(){
+        Integer [] dt = {1,3,5};
+        Observable<Integer> balls = Observable.interval(100l, TimeUnit.MICROSECONDS)
+                .map(Long::intValue)
+                .map(i -> dt[i])
+                .take(dt.length);
+
+        ConnectableObservable<Integer> source = balls.publish();
+        source.subscribe(data ->  System.out.println("Subscriber #1 -> " + data));
+        source.subscribe(data ->  System.out.println("Subscriber #2 -> " + data));
+        source.connect();
+
+        source.subscribe(data ->  System.out.println("Subscriber #3 -> " + data));
+    }
+
     public static void main(String[] args) {
         FirstExample firstExample = new FirstExample();
 
-        firstExample.observableToSingle();
+        firstExample.connectableObservable();
     }
 }
