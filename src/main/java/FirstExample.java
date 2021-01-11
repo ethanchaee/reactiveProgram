@@ -226,7 +226,7 @@ public class FirstExample {
     }
 
     public static void main(String[] args) {
-        ConditionOperator example = new ConditionOperator();
-        example.execute();
+        Scheduler example = new Scheduler();
+        //example.execute();
     }
 }
