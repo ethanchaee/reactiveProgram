@@ -226,8 +226,7 @@ public class FirstExample {
     }
 
     public static void main(String[] args) {
-        OperatorExample example = new OperatorExample();
-
-        example.query();
+        ConditionOperator example = new ConditionOperator();
+        example.execute();
     }
 }
